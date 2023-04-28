@@ -11,4 +11,7 @@
     <string name="yellow_box">Yellow Box</string>
     <string name="generated_number">Generated number: %1$d</string>
     <string name="generate_number">Generate number</string>
+    <string name="title_fragment_root">Root</string>
+    <string name="title_fragment_box">Box</string>
+    <string name="title_fragment_secret">Secret</string>
 </resources>
