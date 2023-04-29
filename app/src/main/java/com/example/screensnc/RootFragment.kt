@@ -20,11 +20,11 @@ class RootFragment : Fragment(R.layout.fragment_root) {
         binding = FragmentRootBinding.bind(view)
 
         binding.openYellowBoxButton.setOnClickListener {
-            openBox(Color.rgb(255, 255, 200))
+            openBox(Color.rgb(255, 255, 200),"Yellow")
         }
 
         binding.openGreenBoxButton.setOnClickListener {
-            openBox(Color.rgb(200, 255, 200))
+            openBox(Color.rgb(200, 255, 200),"Green")
         }
 
         //  Для получения результата с возвращения со следующего экрана, при повороте экрана, результат придет еще раз, нужна проверка, способ так себе
@@ -41,10 +41,10 @@ class RootFragment : Fragment(R.layout.fragment_root) {
         }
     }
 
-    private fun openBox(color: Int) {
+    private fun openBox(color: Int,colorName:String) {
         findNavController().navigate(
             R.id.action_rootFragment_to_boxFragment,
-            bundleOf(BoxFragment.ARG_COLOR to color),
+            bundleOf(BoxFragment.ARG_COLOR to color, BoxFragment.ARG_COLOR_NAME to colorName),
             navOptions {
                 anim {
                     enter = R.anim.enter
