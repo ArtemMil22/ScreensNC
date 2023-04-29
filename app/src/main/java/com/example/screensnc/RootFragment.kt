@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -20,15 +19,17 @@ class RootFragment : Fragment(R.layout.fragment_root) {
         binding = FragmentRootBinding.bind(view)
 
         binding.openYellowBoxButton.setOnClickListener {
-            openBox(Color.rgb(255, 255, 200),"Yellow")
+            openBox(Color.rgb(255, 255, 200), getString(R.string.yellow))
         }
 
         binding.openGreenBoxButton.setOnClickListener {
-            openBox(Color.rgb(200, 255, 200),"Green")
+            openBox(Color.rgb(200, 255, 200), getString(R.string.green))
         }
 
-        //  Для получения результата с возвращения со следующего экрана, при повороте экрана, результат придет еще раз, нужна проверка, способ так себе
-        // findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("asd")?.observe(viewLifecycleOwner){}
+        //  Для получения результата с возвращения со следующего экрана,
+        //  при повороте экрана, результат придет еще раз, нужна проверка, способ так себе
+        // findNavController().currentBackStackEntry?.savedStateHandle
+        // ?.getLiveData<Int>("asd")?.observe(viewLifecycleOwner){}
         parentFragmentManager.setFragmentResultListener(
             BoxFragment.REQUEST_CODE,
             viewLifecycleOwner
@@ -41,10 +42,13 @@ class RootFragment : Fragment(R.layout.fragment_root) {
         }
     }
 
-    private fun openBox(color: Int,colorName:String) {
+    private fun openBox(color: Int, colorName: String) {
+
+        val direction = RootFragmentDirections
+            .actionRootFragmentToBoxFragment(colorName, color)
+
         findNavController().navigate(
-            R.id.action_rootFragment_to_boxFragment,
-            bundleOf(BoxFragment.ARG_COLOR to color, BoxFragment.ARG_COLOR_NAME to colorName),
+            direction,
             navOptions {
                 anim {
                     enter = R.anim.enter
