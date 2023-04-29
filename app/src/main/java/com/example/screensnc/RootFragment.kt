@@ -26,19 +26,18 @@ class RootFragment : Fragment(R.layout.fragment_root) {
             openBox(Color.rgb(200, 255, 200), getString(R.string.green))
         }
 
-        //  Для получения результата с возвращения со следующего экрана,
-        //  при повороте экрана, результат придет еще раз, нужна проверка, способ так себе
-        // findNavController().currentBackStackEntry?.savedStateHandle
-        // ?.getLiveData<Int>("asd")?.observe(viewLifecycleOwner){}
-        parentFragmentManager.setFragmentResultListener(
-            BoxFragment.REQUEST_CODE,
-            viewLifecycleOwner
-        ) { _, data ->
-            val number = data.getInt(BoxFragment.EXTRA_RANDOM_NUMBER)
+        val liveData = findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Int>(BoxFragment.EXTRA_RANDOM_NUMBER)
 
-            Toast.makeText(
-                requireContext(), getString(R.string.generated_number, number), Toast.LENGTH_SHORT
-            ).show()
+        liveData?.observe(viewLifecycleOwner) { randomNumber ->
+            if (randomNumber!= null) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.generated_number, randomNumber),
+                    Toast.LENGTH_SHORT
+                ).show()
+                liveData.value = null
+            }
         }
     }
 

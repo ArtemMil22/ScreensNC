@@ -35,23 +35,14 @@ class BoxFragment : Fragment(R.layout.fragment_box) {
 
         binding.generateNumberButton.setOnClickListener {
             val number = Random.nextInt(100)
-            // способ отправки аргумента на предыдущий экран на 21 год
-            // findNavController().previousBackStackEntry?.savedStateHandle?.set("asd",number)
-            parentFragmentManager.setFragmentResult(
-                REQUEST_CODE,
-                bundleOf(EXTRA_RANDOM_NUMBER to number)
-            )
+            // способ отправки аргумента на предыдущий экран safeargs
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(EXTRA_RANDOM_NUMBER,number)
+
             findNavController().popBackStack()
         }
     }
 
     companion object {
-
-        // используя FragmentResultApi (FRA) по следующему ключу мы сможем
-        // получить результат
-        const val REQUEST_CODE = "RANDOM_NUMBER_REQUEST_CODE"
-
-        // под нижеследующем будет ключ самого значения сгенерированного number
         const val EXTRA_RANDOM_NUMBER = "EXTRA_RANDOM_NUMBER"
     }
 }
