@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -20,31 +19,35 @@ class RootFragment : Fragment(R.layout.fragment_root) {
         binding = FragmentRootBinding.bind(view)
 
         binding.openYellowBoxButton.setOnClickListener {
-            openBox(Color.rgb(255, 255, 200))
+            openBox(Color.rgb(255, 255, 200), getString(R.string.yellow))
         }
 
         binding.openGreenBoxButton.setOnClickListener {
-            openBox(Color.rgb(200, 255, 200))
+            openBox(Color.rgb(200, 255, 200), getString(R.string.green))
         }
 
-        //  Для получения результата с возвращения со следующего экрана, при повороте экрана, результат придет еще раз, нужна проверка, способ так себе
-        // findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("asd")?.observe(viewLifecycleOwner){}
-        parentFragmentManager.setFragmentResultListener(
-            BoxFragment.REQUEST_CODE,
-            viewLifecycleOwner
-        ) { _, data ->
-            val number = data.getInt(BoxFragment.EXTRA_RANDOM_NUMBER)
+        val liveData = findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Int>(BoxFragment.EXTRA_RANDOM_NUMBER)
 
-            Toast.makeText(
-                requireContext(), getString(R.string.generated_number, number), Toast.LENGTH_SHORT
-            ).show()
+        liveData?.observe(viewLifecycleOwner) { randomNumber ->
+            if (randomNumber!= null) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.generated_number, randomNumber),
+                    Toast.LENGTH_SHORT
+                ).show()
+                liveData.value = null
+            }
         }
     }
 
-    private fun openBox(color: Int) {
+    private fun openBox(color: Int, colorName: String) {
+
+        val direction = RootFragmentDirections
+            .actionRootFragmentToBoxFragment(colorName, color)
+
         findNavController().navigate(
-            R.id.action_rootFragment_to_boxFragment,
-            bundleOf(BoxFragment.ARG_COLOR to color),
+            direction,
             navOptions {
                 anim {
                     enter = R.anim.enter
